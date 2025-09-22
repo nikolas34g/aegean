@@ -57,6 +57,6 @@ for idx, row in df.iterrows():
 results_df = pd.DataFrame(results)
 output_folder = "reviews"
 os.makedirs(output_folder, exist_ok=True)
-output_file = os.path.join(output_folder, f"sentiment_hf_{os.path.basename(csv_file)}")
+output_file = os.path.join(output_folder, f"sentiment_hf_multilingual{os.path.basename(csv_file)}")
 results_df.to_csv(output_file, index=False)
 print(f"Sentiment analysis results saved to: {output_file}")
