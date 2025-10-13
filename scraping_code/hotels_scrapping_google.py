@@ -8,12 +8,12 @@ import undetected_chromedriver as uc
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
-
+import datetime
 # chrome_path = r"driver/chromedriver.exe"
 # s = Service(chrome_path)
 #Golden City Hotel
 
-url = 'https://www.google.com/travel/search?qs=MidDaGtJeHRERGc2ZkswckU2R2cwdlp5OHhNWEpmWjJkdWQyWnJFQUU4AEgA&ap=KigKEgm9ra4NZk1EQBE5w-BlX_A2QBISCUMWHHK-VERAETnD4AUKADdAMAC6AQdyZXZpZXdz&ts=CAEaHgoAEhoSFAoHCOkPEAkYARIHCOkPEAkYAhgBMgIIAioHCgU6A0VVUg'
+url = 'https://www.google.com/travel/search?qs=MihDaG9RbEtTRzhKbTRpX19KQVJvTkwyY3ZNVEYzWW1ONGJqbDVZeEFDOABIAA&ap=KigKEgmuuStSD0VEQBHa3zPuKgs3QBISCZ8IYd3TRkRAEdrfM5YVDzdAMAC6AQdyZXZpZXdz&ts=CAEaHgoAEhoSFAoHCOkPEAoYFBIHCOkPEAoYFRgBMgIIACoHCgU6A0VVUg'
 driver = uc.Chrome()
 driver.get(url)
 action = ActionChains(driver)
@@ -67,5 +67,9 @@ for review_wrapper in reviews:
         df.loc[len(df)] = [review_text, rating]
 
 #saving dataframe as csv
-df.to_csv('../datasets/candiaasaaasf-hotel-only-google.csv', index=False, encoding='utf-8-sig')
+
+timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+filename = f'../datasets/hotel_Scrapping_reviews_{timestamp}.csv'
+
+df.to_csv(filename, index=False, encoding='utf-8-sig')
 driver.quit()

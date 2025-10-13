@@ -30,7 +30,7 @@ def clean_text(text):
 
 # Generate a unique filename with timestamp
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-filename = f'datasets/google_maps_reviews_{timestamp}.csv'
+filename = f'../datasets/google_maps_reviews_{timestamp}.csv'
 url = 'https://www.google.com/maps/place/%CE%91%CE%BB%CE%B9%CE%B5%CF%85%CF%84%CE%B9%CE%BA%CE%AE+%CE%A0%CF%81%CE%BF%CE%B2%CE%BB%CE%AE%CF%84%CE%B1+%CE%91%CF%81%CE%B5%CF%84%CF%83%CE%BF%CF%8D/@40.5732093,22.9518629,16.25z/data=!4m6!3m5!1s0x14a83f649254da0f:0xb8b5825505714fc8!8m2!3d40.572209!4d22.9482184!16s%2Fg%2F11h1kx_z33?authuser=0&hl=en&entry=ttu&g_ep=EgoyMDI1MDkxNy4wIKXMDSoASAFQAw%3D%3D'
 
 # Chrome options

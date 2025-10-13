@@ -7,7 +7,7 @@ from google.genai import types
 client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
 
 # Specify the CSV file to process
-csv_file = os.path.join("..", "datasets", "google_maps_reviews_2025-09-01_15-24-04.csv")
+csv_file = os.path.join("..", "datasets", "hotel_Scrapping_reviews_2025-10-13_10-01-18.csv")
 
 if not os.path.exists(csv_file):
     print(f"File not found: {csv_file}")

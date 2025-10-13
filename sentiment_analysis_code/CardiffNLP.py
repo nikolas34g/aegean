@@ -10,7 +10,6 @@ sentiment_pipeline = pipeline(
 )
 
 
-# csv_file = os.path.join("datasets", "google_maps_reviews_2025-09-01_15-34-22.csv")  
 csv_file = os.path.join("..", "datasets", "google_maps_reviews_2025-09-01_15-34-22.csv")
 
 # Check if the file exists
