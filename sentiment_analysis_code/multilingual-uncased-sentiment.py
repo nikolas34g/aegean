@@ -3,9 +3,8 @@ import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-# Specify the CSV file to process
-csv_file = os.path.join("datasets", "google_maps_reviews_2025-09-01_15-34-22.csv")
 
+csv_file = os.path.join("..", "datasets", "google_maps_reviews_2025-09-01_15-34-22.csv")
 if not os.path.exists(csv_file):
     print(f"File not found: {csv_file}")
     exit()
@@ -55,7 +54,7 @@ for idx, row in df.iterrows():
 
 # Save results to CSV
 results_df = pd.DataFrame(results)
-output_folder = "reviews"
+output_folder = os.path.join("..", "reviews")
 os.makedirs(output_folder, exist_ok=True)
 output_file = os.path.join(output_folder, f"sentiment_hf_multilingual{os.path.basename(csv_file)}")
 results_df.to_csv(output_file, index=False)

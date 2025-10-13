@@ -67,5 +67,5 @@ for review_wrapper in reviews:
         df.loc[len(df)] = [review_text, rating]
 
 #saving dataframe as csv
-df.to_csv('datasets/candiaasaaasf-hotel-only-google.csv')
+df.to_csv('../datasets/candiaasaaasf-hotel-only-google.csv', index=False, encoding='utf-8-sig')
 driver.quit()

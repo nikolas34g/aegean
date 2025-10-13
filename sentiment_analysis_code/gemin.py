@@ -7,7 +7,7 @@ from google.genai import types
 client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
 
 # Specify the CSV file to process
-csv_file = os.path.join("datasets", "google_maps_reviews_2025-09-01_15-24-04.csv")
+csv_file = os.path.join("..", "datasets", "google_maps_reviews_2025-09-01_15-24-04.csv")
 
 if not os.path.exists(csv_file):
     print(f"File not found: {csv_file}")
@@ -52,7 +52,7 @@ for idx, row in df.iterrows():
 
 # Save results to CSV
 results_df = pd.DataFrame(results)
-output_folder = "reviews"
+output_folder = os.path.join("..", "reviews")
 os.makedirs(output_folder, exist_ok=True)
 output_file = os.path.join(output_folder, f"sentiment_gemini_{os.path.basename(csv_file)}")
 results_df.to_csv(output_file, index=False)
