@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis
+    </title>
+</head>
+<body>
+    <!-- src/app/home/home.component.html -->
+<h1>Hotel Reviews</h1>
+<button (click)="fetchReviews()">Load Reviews</button>
+
+<div *ngIf="loading">Loading...</div>
+
+<table *ngIf="reviews.length > 0" border="1" cellspacing="0" cellpadding="5">
+  <thead>
+    <tr>
+      <th>Review</th>
+      <th>Sentiment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let review of reviews">
+      <td>{{ review.review }}</td>
+      <td>{{ review.sentiment }}</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
