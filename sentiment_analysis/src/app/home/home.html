@@ -7,8 +7,8 @@
     </title>
 </head>
 <body>
-    <!-- src/app/home/home.component.html -->
-<h1>Hotel Reviews</h1>
+
+<!-- <h1>Hotel Reviews</h1>
 <button (click)="fetchReviews()">Load Reviews</button>
 
 <div *ngIf="loading">Loading...</div>
@@ -26,7 +26,43 @@
       <td>{{ review.sentiment }}</td>
     </tr>
   </tbody>
-</table>
+</table> -->
+  <h1>Google Maps Review Sentiment Analysis</h1>
+
+  <div>
+    <label>Place URL:</label>
+    <input [(ngModel)]="url" type="text" placeholder="Paste Google Maps URL" style="width: 400px;" />
+  </div>
+
+  <div>
+    <label>Choose Model:</label>
+    <select [(ngModel)]="model">
+      <option value="gemini">Gemini</option>
+      <option value="multilingual">Multilingual</option>
+    </select>
+  </div>
+
+  <button (click)="runAnalysis()">Run Analysis</button>
+
+  <div *ngIf="loading">Running analysis... please wait ⏳</div>
+
+  <table *ngIf="reviews.length > 0" border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Review</th>
+        <th>Rating</th>
+        <th>Sentiment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let review of reviews">
+        <td>{{ review.review }}</td>
+        <td>{{ review.rating }}</td>
+        <td>{{ review.sentiment }}</td>
+      </tr>
+    </tbody>
+  </table>
+
 
 </body>
 </html>
