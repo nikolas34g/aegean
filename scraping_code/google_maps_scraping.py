@@ -14,15 +14,15 @@ from nltk.tokenize import word_tokenize
 import os
 
 # Get URL from command line
-if len(sys.argv) < 2:
-    print("Usage: python google_maps_scraping.py <URL>")
+# Get URL and output path from command line
+if len(sys.argv) < 3:
+    print("Usage: python google_maps_scraping.py <URL> <OUTPUT_CSV_PATH>")
     sys.exit(1)
 
 url = sys.argv[1]
+output_path = sys.argv[2]
 
-# Download NLTK resources
-nltk.download('punkt')
-nltk.download('stopwords')
+
 
 stop_words = set(stopwords.words('english'))  # Change to Greek stopwords if needed
 
@@ -38,7 +38,7 @@ def clean_text(text):
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d")
 dataset_folder = os.path.join(os.path.dirname(__file__), "..", "datasets")
 os.makedirs(dataset_folder, exist_ok=True)
-filename = os.path.join(dataset_folder, f'google_maps_reviews_{timestamp}.csv')
+# filename = os.path.join(dataset_folder, f'google_maps_reviews_{timestamp}.csv')
 
 # Chrome options
 options = uc.ChromeOptions()
@@ -138,11 +138,12 @@ for review_element in reviews_elements:
         continue
 
 # Save CSV
-df.to_csv(filename, index=False, encoding='utf-8-sig')
+df.to_csv(output_path, index=False, encoding='utf-8-sig')
+# df.to_csv(filename, index=False, encoding='utf-8-sig')
 driver.quit()
 
 print(f"Total reviews: {len(df)}")
-print(f"Reviews saved to: {filename}")
+print(f"Reviews saved to: {output_path}")
 
 
 

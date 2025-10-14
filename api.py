@@ -29,35 +29,39 @@ def analyze_reviews(request: AnalysisRequest):
     url = request.url
     model = request.model.lower()
 
-    today = datetime.datetime.now().strftime("%Y-%m-%d")
-    dataset_name = f"google_maps_reviews_{today}.csv"
+    # Create dataset filename with timestamp (not just date)
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    dataset_name = f"google_maps_reviews_{timestamp}.csv"
     dataset_path = os.path.join("datasets", dataset_name)
-    reviews_path = os.path.join("reviews", f"sentiment_{model}_{dataset_name}")
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))  # full path to 'article' folder
+    base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # ✅ Step 1: Always scrape fresh reviews
+    # ✅ Step 1: Run the scraping script — it will create the CSV file
     print("Scraping fresh reviews...")
     scraper_script = os.path.join(base_dir, "scraping_code", "google_maps_scraping.py")
-    subprocess.run([python_executable, scraper_script, url])
+    subprocess.run([python_executable, scraper_script, url, dataset_path])  # <-- pass dataset_path
 
-    # ✅ Step 2: Always run the selected model
-    # print(f"Running {model} analysis...")
-    # if model == "gemini":
-    #     script_path = os.path.join(base_dir, "sentiment_analysis_code", "gemini.py")
-    #     subprocess.run(["python", script_path, dataset_path])
-    # elif model == "multilingual":
-    #     script_path = os.path.join(base_dir, "sentiment_analysis_code", "multilingual-uncased-sentiment.py")
-    #     subprocess.run(["python", script_path, dataset_path])
-    # else:
-    #     return {"error": "Invalid model selected"}
+    # ✅ Step 2: Run sentiment analysis on that same CSV
+    print(f"Running {model} analysis...")
+    if model == "gemini":
+        script_path = os.path.join(base_dir, "sentiment_analysis_code", "gemin.py")
+        subprocess.run([python_executable, script_path, dataset_path])  # <-- pass dataset_path
+        reviews_path = os.path.join(base_dir, "reviews", f"sentiment_gemini_{dataset_name}")
 
-    # # ✅ Step 3: Return the results
-    # if os.path.exists(reviews_path):
-    #     df = pd.read_csv(reviews_path)
-    #     return df.to_dict(orient="records")
-    # else:
-    #     return {"error": f"Analysis file not found for model {model}"}
+    elif model == "multilingual":
+        script_path = os.path.join(base_dir, "sentiment_analysis_code", "multilingual-uncased-sentiment.py")
+        subprocess.run([python_executable, script_path, dataset_path])
+        reviews_path = os.path.join("reviews", f"sentiment_multilingual_{dataset_name}")
+    else:
+        return {"error": "Invalid model name"}
+
+    # ✅ Step 3: Return results
+    if os.path.exists(reviews_path):
+        df = pd.read_csv(reviews_path)
+        return df.to_dict(orient="records")
+    else:
+        return {"error": f"Analysis file not found for model {model}"}
+
 
 
 
