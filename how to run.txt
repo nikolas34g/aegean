@@ -1,0 +1,8 @@
+PS C:\Users\nikosgkaripis\Desktop\article> .\venv\Scripts\activate
+(venv) PS C:\Users\nikosgkaripis\Desktop\article> uvicorn api:app --reload --host 0.0.0.0 --port 8000
+
+
+
+
+PS C:\Users\nikosgkaripis\Desktop\article\sentiment_analysis> & C:/Users/nikosgkaripis/Desktop/article/venv/Scripts/Activate.ps1
+(venv) PS C:\Users\nikosgkaripis\Desktop\article\sentiment_analysis> npm start
