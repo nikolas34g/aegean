@@ -7,34 +7,15 @@
     </title>
 </head>
 <body>
-
-<!-- <h1>Hotel Reviews</h1>
-<button (click)="fetchReviews()">Load Reviews</button>
-
-<div *ngIf="loading">Loading...</div>
-
-<table *ngIf="reviews.length > 0" border="1" cellspacing="0" cellpadding="5">
-  <thead>
-    <tr>
-      <th>Review</th>
-      <th>Sentiment</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let review of reviews">
-      <td>{{ review.review }}</td>
-      <td>{{ review.sentiment }}</td>
-    </tr>
-  </tbody>
-</table> -->
+  <div class="container">
   <h1>Google Maps Review Sentiment Analysis</h1>
 
-  <div>
+  <div class="input-group">
     <label>Place URL:</label>
-    <input [(ngModel)]="url" type="text" placeholder="Paste Google Maps URL" style="width: 400px;" />
+    <input [(ngModel)]="url" type="text" placeholder="Paste Google Maps URL" />
   </div>
 
-  <div>
+  <div class="input-group">
     <label>Choose Model:</label>
     <select [(ngModel)]="model">
       <option value="gemini">Gemini</option>
@@ -42,11 +23,13 @@
     </select>
   </div>
 
-  <button (click)="runAnalysis()">Run Analysis</button>
+  <button (click)="runAnalysis()">🚀 Run Analysis</button>
 
-  <div *ngIf="loading">Running analysis... please wait ⏳</div>
+  <div *ngIf="loading" class="loading">
+    Running analysis... please wait ⏳
+  </div>
 
-  <table *ngIf="reviews.length > 0" border="1" cellspacing="0" cellpadding="5">
+  <table *ngIf="reviews.length > 0">
     <thead>
       <tr>
         <th>Review</th>
@@ -58,11 +41,19 @@
       <tr *ngFor="let review of reviews">
         <td>{{ review.review }}</td>
         <td>{{ review.rating }}</td>
-        <td>{{ review.sentiment }}</td>
+        <td
+          [ngClass]="{
+            'sentiment-positive': review.sentiment === 'Positive',
+            'sentiment-negative': review.sentiment === 'Negative',
+            'sentiment-neutral': review.sentiment === 'Neutral'
+          }"
+        >
+          {{ review.sentiment }}
+        </td>
       </tr>
     </tbody>
   </table>
-
+</div>
 
 </body>
 </html>

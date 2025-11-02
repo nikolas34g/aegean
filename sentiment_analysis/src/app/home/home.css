@@ -1,4 +1,4 @@
-/* Reset some default browser styles */
+/* ==== Global Reset ==== */
 * {
   margin: 0;
   padding: 0;
@@ -6,129 +6,162 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* Body layout and background */
+/* ==== Page Background ==== */
 body {
-  background: linear-gradient(to right, #2ddc9c, #2a7cb8);
+  background: linear-gradient(135deg, #0f3e84, #1b4572, #164571);
+  color: #e0e0e0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   padding: 40px;
-  color: #333;
 }
-label{
-    font-size: 1rem;
+
+/* ==== Main Container ==== */
+.container {
+  background: rgb(0 9 12 / 81%);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 40px 50px;
+  width: 90%;
+  max-width: 800px;
+  color: #e3f2fd;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  margin-top: 50px;
 }
-/* Page Title */
+
+/* ==== Title ==== */
 h1 {
   font-size: 2rem;
-  font-weight: 600;
-  color: #1a237e;
-  margin-bottom: 30px;
+  font-weight: 700;
+  color: #90caf9;
   text-align: center;
+  margin-bottom: 25px;
 }
 
-/* Form section styling */
-div {
-  margin: 10px 0;
+/* ==== Form ==== */
+.input-group {
+  margin: 15px 0;
+  text-align: left;
 }
 
-/* Input and select fields */
+label {
+  font-size: 1rem;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  color: #bbdefb;
+}
+
 input[type="text"],
 select {
-  padding: 10px;
-  width: 350px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: none;
   font-size: 1rem;
-  transition: border-color 0.3s;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #aca9a9;
+  transition: 0.3s ease;
 }
 
 input[type="text"]:focus,
 select:focus {
-  border-color: #1a73e8;
-  outline: none;
-  box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
+  box-shadow: 0 0 8px rgba(30, 136, 229, 0.6);
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* Button styling */
+/* ==== Button ==== */
 button {
   margin-top: 20px;
-  padding: 10px 20px;
-  background: #1a73e8;
+  padding: 12px 25px;
+  background: linear-gradient(90deg, #0d47a1, #1976d2);
   border: none;
-  border-radius: 6px;
-  color: #fff;
+  border-radius: 30px;
+  color: white;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.1s ease;
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  background: #0f5bd8;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  background: linear-gradient(90deg, #1976d2, #0d47a1);
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.5);
 }
 
-/* Loading text */
-div[ngIf="loading"] {
+/* ==== Loading Text ==== */
+.loading {
   margin-top: 20px;
   font-style: italic;
-  color: #555;
+  color: #90caf9;
+  animation: pulse 1.5s infinite;
 }
 
-/* Table styling */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ==== Table ==== */
 table {
+  width: 100%;
   margin-top: 30px;
   border-collapse: collapse;
-  width: 80%;
-  max-width: 900px;
-  background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  color: #e3f2fd;
 }
 
 thead {
-  background: #1a73e8;
+  background: #0d47a1;
   color: #fff;
 }
 
-th, td {
+th,
+td {
   text-align: left;
-  padding: 12px 15px;
-  border-bottom: 1px solid #eee;
+  padding: 14px 16px;
 }
 
 tbody tr:hover {
-  background: #f7f9ff;
+  background: rgba(25, 118, 210, 0.2);
+  transition: background 0.3s ease;
 }
 
-td:nth-child(3) {
-  font-weight: 500;
+td.sentiment-positive {
+  color: #66bb6a;
+  font-weight: 600;
 }
 
-/* Sentiment color coding */
-td:nth-child(3):contains("Positive") {
-  color: #2e7d32;
+td.sentiment-negative {
+  color: #ef5350;
+  font-weight: 600;
 }
 
-td:nth-child(3):contains("Negative") {
-  color: #c62828;
+td.sentiment-neutral {
+  color: #fbc02d;
+  font-weight: 600;
 }
 
-td:nth-child(3):contains("Neutral") {
-  color: #f9a825;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  table {
-    width: 100%;
+/* ==== Responsive ==== */
+@media (max-width: 600px) {
+  .container {
+    padding: 25px;
   }
-  input[type="text"], select {
-    width: 100%;
-  }
+
   h1 {
     font-size: 1.5rem;
+  }
+
+  button {
+    width: 100%;
   }
 }

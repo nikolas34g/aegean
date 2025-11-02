@@ -49,7 +49,7 @@ for idx, row in df.iterrows():
         "sentiment": sentiment
     })
 
-    print(f"✅ Review {idx+1}: {sentiment}")
+    # print(f"✅ Review {idx+1}: {sentiment}")
 
 # ✅ Save results in the 'reviews' folder
 output_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "reviews")
