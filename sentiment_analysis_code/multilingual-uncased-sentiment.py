@@ -2,17 +2,21 @@ import os
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
+import sys
 
+if len(sys.argv) < 2:
+    print("Usage: python sentiment_hf.py <csv_file_path>")
+    sys.exit(1)
 
-csv_file = os.path.join("..", "datasets", "google_maps_reviews_2025-09-01_15-34-22.csv")
+csv_file = sys.argv[1]
+
 if not os.path.exists(csv_file):
-    print(f"File not found: {csv_file}")
-    exit()
+    print(f"❌ File not found: {csv_file}")
+    sys.exit(1)
 
-# Read CSV and remove duplicates
 df = pd.read_csv(csv_file)
 df = df.drop_duplicates(subset=['review', 'rating'])
-
+    
 # Load the multilingual sentiment model
 model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -47,15 +51,16 @@ for idx, row in df.iterrows():
         "sentiment": sentiment
     })
     
-    print(f"Review {idx+1}: {review_text}")
-    print(f"Rating: {rating}")
-    print(f"Sentiment: {sentiment}")
-    print("-" * 50)
+    print(f"✅ Review {idx+1}: {sentiment}")
 
-# Save results to CSV
-results_df = pd.DataFrame(results)
-output_folder = os.path.join("..", "reviews")
+# ✅ Save results in the 'reviews' folder (same as Gemini style)
+output_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "reviews")
 os.makedirs(output_folder, exist_ok=True)
-output_file = os.path.join(output_folder, f"sentiment_hf_multilingual{os.path.basename(csv_file)}")
-results_df.to_csv(output_file, index=False)
-print(f"Sentiment analysis results saved to: {output_file}")
+
+output_name = f"sentiment_hf_multilingual_{os.path.basename(csv_file)}"
+output_file = os.path.join(output_folder, output_name)
+
+results_df = pd.DataFrame(results)
+results_df.to_csv(output_file, index=False, encoding='utf-8-sig')
+
+print(f"💾 Sentiment analysis results saved to: {output_file}")

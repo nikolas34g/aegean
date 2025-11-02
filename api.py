@@ -51,7 +51,7 @@ def analyze_reviews(request: AnalysisRequest):
     elif model == "multilingual":
         script_path = os.path.join(base_dir, "sentiment_analysis_code", "multilingual-uncased-sentiment.py")
         subprocess.run([python_executable, script_path, dataset_path])
-        reviews_path = os.path.join("reviews", f"sentiment_multilingual_{dataset_name}")
+        reviews_path = os.path.join("reviews", f"sentiment_hf_multilingual_{dataset_name}")
     else:
         return {"error": "Invalid model name"}
 
