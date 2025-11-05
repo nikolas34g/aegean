@@ -24,7 +24,7 @@
   </div>
 
   <button (click)="runAnalysis()">🚀 Run Analysis</button>
-
+  <button (click)="runComparison()">🔄 Compare Models</button>
   <div *ngIf="loading" class="loading">
     Running analysis... please wait ⏳
   </div>
@@ -53,6 +53,30 @@
       </tr>
     </tbody>
   </table>
+  <table *ngIf="comparisonData.length > 0">
+  <thead>
+    <tr>
+      <th>Review</th>
+      <th>Rating</th>
+      <th>Gemini Sentiment</th>
+      <th>HuggingFace Sentiment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let review of comparisonData">
+      <td>{{ review.review }}</td>
+      <td>{{ review.rating }}</td>
+      <td>{{ review.sentiment_gemini }}</td>
+      <td>{{ review.sentiment_hf }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>🧩 Model Summaries</h3>
+<p><b>Gemini:</b> {{ modelSummaries.gemini }}</p>
+<p><b>HuggingFace:</b> {{ modelSummaries.huggingface }}</p>
+<p><b>Combined:</b> {{ modelSummaries.combined }}</p>
+
 </div>
 
 </body>

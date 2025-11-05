@@ -12,8 +12,13 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import os
+import random
 
-# Get URL from command line
+# =================== CONFIG ===================
+mode = "random10"  # "all" or "random10"
+max_reviews_to_scrape = 15  # Only used if mode="random10"
+# ============================================
+
 # Get URL and output path from command line
 if len(sys.argv) < 3:
     print("Usage: python google_maps_scraping.py <URL> <OUTPUT_CSV_PATH>")
@@ -21,8 +26,6 @@ if len(sys.argv) < 3:
 
 url = sys.argv[1]
 output_path = sys.argv[2]
-
-
 
 stop_words = set(stopwords.words('english'))  # Change to Greek stopwords if needed
 
@@ -33,12 +36,6 @@ def clean_text(text):
     words = word_tokenize(text)
     words = [w for w in words if w not in stop_words]
     return ' '.join(words)
-
-# Generate a unique filename with timestamp
-timestamp = datetime.datetime.now().strftime("%Y-%m-%d")
-dataset_folder = os.path.join(os.path.dirname(__file__), "..", "datasets")
-os.makedirs(dataset_folder, exist_ok=True)
-# filename = os.path.join(dataset_folder, f'google_maps_reviews_{timestamp}.csv')
 
 # Chrome options
 options = uc.ChromeOptions()
@@ -96,7 +93,11 @@ while scroll_attempts < max_scrolls:
     else:
         scroll_attempts = 0
         prev_count = len(current_reviews)
-    
+
+    # Stop early if mode=random10 and reached max_reviews_to_scrape
+    if mode == "random10" and len(current_reviews) >= max_reviews_to_scrape:
+        break
+
     driver.execute_script("""
         var scrollContainer = document.querySelector('.m6QErb.DxyBCb.kA9KIf.dS8AEf');
         if (scrollContainer) { scrollContainer.scrollTop = scrollContainer.scrollHeight; }
@@ -107,7 +108,9 @@ while scroll_attempts < max_scrolls:
 df = pd.DataFrame(columns=['review', 'rating'])
 reviews_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'jftiEf')]")
 
-for review_element in reviews_elements:
+for i, review_element in enumerate(reviews_elements):
+    if mode == "random10" and i >= max_reviews_to_scrape:
+        break
     try:
         try:
             more_button = review_element.find_element(By.XPATH, ".//button[contains(., 'More') or contains(., 'Περισσότερα')]")
@@ -115,13 +118,13 @@ for review_element in reviews_elements:
             time.sleep(0.5)
         except:
             pass
-        
+
         try:
             review_text = review_element.find_element(By.XPATH, ".//span[@class='wiI7pd']").text
             review_text = clean_text(review_text)
         except:
             review_text = ""
-        
+
         try:
             rating_element = review_element.find_element(By.XPATH, ".//span[contains(@class, 'kvMYJc')]")
             rating = rating_element.get_attribute("aria-label")
@@ -129,20 +132,21 @@ for review_element in reviews_elements:
             rating = rating_match.group(1) if rating_match else ""
         except:
             rating = ""
-        
+
         if review_text and rating:
             df.loc[len(df)] = [review_text, rating]
-            
+
     except Exception as e:
         print(f"Error processing review: {e}")
         continue
 
+# If mode=random10, pick 10 random reviews from the scraped set
+if mode == "random10" and len(df) > 10:
+    df = df.sample(n=10, random_state=42).reset_index(drop=True)
+
 # Save CSV
 df.to_csv(output_path, index=False, encoding='utf-8-sig')
-# df.to_csv(filename, index=False, encoding='utf-8-sig')
 driver.quit()
 
-print(f"Total reviews: {len(df)}")
+print(f"Total reviews collected: {len(df)}")
 print(f"Reviews saved to: {output_path}")
-
-

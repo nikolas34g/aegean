@@ -11,6 +11,10 @@ export class ReviewsService {
   analyzeReviews(url: string, model: string): Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/analyze`, { url, model });
   }
+
+  compareModels(url: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/compare`, { url });
+  }
 }
 
 
