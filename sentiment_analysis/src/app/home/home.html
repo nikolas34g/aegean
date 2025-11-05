@@ -6,50 +6,69 @@
   <title>Sentiment Analysis</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Google Maps Review Sentiment Analysis</h1>
+<div class="container">
+  <h1>Google Maps Review Sentiment Analysis</h1>
 
-    <!-- Input URL -->
-    <div class="input-group">
-      <label>Place URL:</label>
-      <input [(ngModel)]="url" type="text" placeholder="Paste Google Maps URL" />
-    </div>
+  <!-- Input URL -->
+  <div class="input-group">
+    <label>Place URL:</label>
+    <input [(ngModel)]="url" type="text" placeholder="Paste Google Maps URL" />
+  </div>
 
-    <!-- Model selection -->
-    <div class="input-group">
-      <label>Choose Model:</label>
-      <select [(ngModel)]="model">
-        <option value="gemini">Gemini</option>
-        <option value="multilingual">Multilingual</option>
-      </select>
-    </div>
+  <!-- Model selection -->
+  <div class="input-group">
+    <label>Choose Model:</label>
+    <select [(ngModel)]="model">
+      <option value="gemini">Gemini</option>
+      <option value="multilingual">Multilingual</option>
+    </select>
+  </div>
 
-    <!-- Buttons -->
-    <button (click)="runAnalysis()">🚀 Run Analysis</button>
-    <button (click)="runComparison()">🔄 Compare Models</button>
+  <!-- Buttons -->
+  <button (click)="runAnalysis()">🚀 Run Analysis</button>
+  <button (click)="runComparison()">🔄 Compare Models</button>
 
-    <!-- Loading -->
-    <div *ngIf="loading" class="loading">
-      Running analysis... please wait ⏳
-    </div>
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">Running analysis... please wait ⏳</div>
 
+  <!-- Single Model Analysis -->
+  <div *ngIf="mode === 'single'">
+    <button (click)="showSingleModelSummary = !showSingleModelSummary">
+      {{ showSingleModelSummary ? 'Hide' : 'Show' }} {{ model | titlecase }} Summary
+    </button>
 
-    <div *ngIf="plots">
-      <h3>📊 Sentiment Counts</h3>
-      <canvas *ngIf="sentimentChartData" baseChart
-              [data]="sentimentChartData"
-              [options]="chartOptions"
-              chartType="bar">
-      </canvas>
+    <button *ngIf="reviews.length > 0" (click)="showReviews = !showReviews">
+      {{ showReviews ? 'Hide' : 'Show' }} Reviews
+    </button>
 
-      <h3>🌟 Star Ratings Distribution</h3>
-      <canvas *ngIf="ratingsChartData" baseChart
-              [data]="ratingsChartData"
-              [options]="chartOptions"
-              chartType="bar">
-      </canvas>
-    </div>
-    <!-- Model Summaries with toggle -->
+    <div *ngIf="showSingleModelSummary"><p>{{ singleModelSummary }}</p></div>
+
+    <table *ngIf="showReviews && reviews.length > 0">
+      <thead>
+        <tr>
+          <th>Review</th>
+          <th>Rating</th>
+          <th>{{ model | titlecase }} Sentiment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let review of reviews.slice(0,10)">
+          <td>{{ review.review }}</td>
+          <td>{{ review.rating }}</td>
+          <td [ngClass]="{
+                'sentiment-positive': review.sentiment?.trim().toLowerCase() === 'positive',
+                'sentiment-negative': review.sentiment?.trim().toLowerCase() === 'negative',
+                'sentiment-neutral': review.sentiment?.trim().toLowerCase() === 'neutral'
+              }">
+            {{ review.sentiment }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Comparison Mode -->
+  <div *ngIf="mode === 'compare'">
     <h3>🧩 Model Summaries</h3>
     <div>
       <button (click)="showGeminiSummary = !showGeminiSummary">
@@ -67,8 +86,21 @@
       </button>
       <p *ngIf="showCombinedSummary">{{ modelSummaries.combined }}</p>
     </div>
+    <div *ngIf="plots">
+      <h3>📊 Sentiment Counts</h3>
+      <canvas *ngIf="sentimentChartData" baseChart
+              [data]="sentimentChartData"
+              [options]="chartOptions"
+              chartType="bar">
+      </canvas>
 
-    <!-- Reviews table toggle -->
+      <h3>🌟 Star Ratings Distribution</h3>
+      <canvas *ngIf="ratingsChartData" baseChart
+              [data]="ratingsChartData"
+              [options]="chartOptions"
+              chartType="bar">
+      </canvas>
+    </div>
     <div *ngIf="comparisonData.length > 0">
       <button (click)="showReviews = !showReviews">
         {{ showReviews ? 'Hide' : 'Show' }} Sample Reviews
@@ -94,7 +126,6 @@
                 }">
               {{ review.sentiment_gemini }}
             </td>
-
             <td [ngClass]="{
                   'sentiment-positive': review.sentiment_hf?.trim().toLowerCase() === 'positive',
                   'sentiment-negative': review.sentiment_hf?.trim().toLowerCase() === 'negative',
@@ -109,6 +140,9 @@
         Showing 10 of {{ comparisonData.length }} reviews. Expand for more if needed.
       </p>
     </div>
+
+    
   </div>
+</div>
 </body>
 </html>

@@ -8,13 +8,15 @@ export class ReviewsService {
 
   constructor(private http: HttpClient) {}
 
-  analyzeReviews(url: string, model: string): Observable<any[]> {
-    return this.http.post<any[]>(`${this.baseUrl}/analyze`, { url, model });
+  analyzeReviews(url: string, model: string): Observable<{reviews: any[], summary: string}> {
+    return this.http.post<{reviews: any[], summary: string}>(`${this.baseUrl}/analyze`, { url, model });
   }
 
   compareModels(url: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/compare`, { url });
   }
+
+  
 }
 
 

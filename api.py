@@ -27,7 +27,7 @@ class ComparisonRequest(BaseModel):
 
 # ------------------ SINGLE MODEL ------------------ #
 @app.post("/analyze")
-def analyze_reviews(request: AnalysisRequest):
+async def analyze_reviews(request: AnalysisRequest):
     url = request.url
     model = request.model.lower()
 
@@ -40,7 +40,7 @@ def analyze_reviews(request: AnalysisRequest):
     scraper_script = os.path.join(base_dir, "scraping_code", "google_maps_scraping.py")
     subprocess.run([python_executable, scraper_script, url, dataset_path], check=True)
 
-    # Run single sentiment model
+    # Run sentiment model
     if model == "gemini":
         script_path = os.path.join(base_dir, "sentiment_analysis_code", "gemin.py")
         subprocess.run([python_executable, script_path, dataset_path], check=True)
@@ -53,11 +53,27 @@ def analyze_reviews(request: AnalysisRequest):
     else:
         return {"error": "Invalid model name"}
 
-    if os.path.exists(reviews_path):
-        df = pd.read_csv(reviews_path)
-        return df.to_dict(orient="records")
-    else:
+    if not os.path.exists(reviews_path):
         return {"error": "Analysis file not found"}
+
+    df = pd.read_csv(reviews_path)
+    reviews = df.to_dict(orient="records")
+
+    # Generate summary using Gemini API
+    client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
+    summary_text = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=f"""Analyze these reviews ({model} results): {reviews}
+        Provide:
+        1. A very short recommendation (1-2 sentences)
+        2. Positives in bullet points
+        3. Negatives in bullet points"""
+    ).text
+
+    return {
+        "reviews": reviews,
+        "summary": summary_text
+    }
 
 # ------------------ COMPARISON ------------------ #
 @app.post("/compare")
