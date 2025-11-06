@@ -57,6 +57,35 @@ constructor(private reviewsService: ReviewsService) {
     this.singleModelSummary = state.singleModelSummary || '';
     this.mode = state.mode || null;
     this.plots = state.plots || null;
+
+    if (this.plots) {
+      this.sentimentChartData = {
+        labels: Object.keys(this.plots.sentiment_counts.gemini),
+        datasets: [
+          {
+            label: 'Gemini',
+            data: Object.values(this.plots.sentiment_counts.gemini),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          },
+          {
+            label: 'HuggingFace',
+            data: Object.values(this.plots.sentiment_counts.huggingface),
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+          },
+        ],
+      };
+
+      this.ratingsChartData = {
+        labels: Object.keys(this.plots.ratings_counts),
+        datasets: [
+          {
+            label: 'Star Ratings',
+            data: Object.values(this.plots.ratings_counts),
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          },
+        ],
+      };
+    }
   }
 }
 
