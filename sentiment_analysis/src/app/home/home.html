@@ -9,39 +9,47 @@
 <div class="container">
   <h1>Google Maps Review Sentiment Analysis</h1>
 
-  <!-- Input URL -->
-  <div class="input-group">
-    <label>Place URL:</label>
-    <input [(ngModel)]="url" type="text" placeholder="Paste Google Maps URL" />
-  </div>
+  <!-- Input Section -->
+  <div class="section-card">
+    <div class="input-group">
+      <label>Place URL:</label>
+      <input [(ngModel)]="url" type="text" placeholder="Paste Google Maps URL" />
+    </div>
 
-  <!-- Model selection -->
-  <div class="input-group">
-    <label>Choose Model:</label>
-    <select [(ngModel)]="model">
-      <option value="gemini">Gemini</option>
-      <option value="multilingual">Multilingual</option>
-    </select>
-  </div>
+    <div class="input-group">
+      <label>Choose Model:</label>
+      <select [(ngModel)]="model">
+        <option value="gemini">Gemini</option>
+        <option value="multilingual">Multilingual</option>
+      </select>
+    </div>
 
-  <!-- Buttons -->
-  <button (click)="runAnalysis()">🚀 Run Analysis</button>
-  <button (click)="runComparison()">🔄 Compare Models</button>
+    <div class="buttons">
+      <button (click)="runAnalysis()">🚀 Single Model Analysis</button>
+      <button (click)="runComparison()">🔄 All models Analysis</button>
+    </div>
+  </div>
 
   <!-- Loading -->
   <div *ngIf="loading" class="loading">Running analysis... please wait ⏳</div>
 
-  <!-- Single Model Analysis -->
-  <div *ngIf="mode === 'single'">
-    <button (click)="showSingleModelSummary = !showSingleModelSummary">
-      {{ showSingleModelSummary ? 'Hide' : 'Show' }} {{ model | titlecase }} Summary
-    </button>
+  <!-- Single Model Section -->
+  <div *ngIf="mode === 'single'" class="section-card">
+    <h3>🧠 {{ model | titlecase }} Model Results</h3>
 
-    <button *ngIf="reviews.length > 0" (click)="showReviews = !showReviews">
-      {{ showReviews ? 'Hide' : 'Show' }} Reviews
-    </button>
+    <div class="buttons">
+      <button (click)="showSingleModelSummary = !showSingleModelSummary">
+        {{ showSingleModelSummary ? 'Hide' : 'Show' }} Summary
+      </button>
+      <button *ngIf="reviews.length > 0" (click)="showReviews = !showReviews">
+        {{ showReviews ? 'Hide' : 'Show' }} Reviews
+      </button>
+    </div>
 
-    <div *ngIf="showSingleModelSummary"><p>{{ singleModelSummary }}</p></div>
+    <div *ngIf="showSingleModelSummary" class="summary-card">
+      <h3>🧠 {{ model | titlecase }} Summary</h3>
+      <p>{{ singleModelSummary }}</p>
+    </div>
 
     <table *ngIf="showReviews && reviews.length > 0">
       <thead>
@@ -52,7 +60,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let review of reviews.slice(0,10)">
+        <tr *ngFor="let review of reviews.slice(0, 10)">
           <td>{{ review.review }}</td>
           <td>{{ review.rating }}</td>
           <td [ngClass]="{
@@ -67,40 +75,47 @@
     </table>
   </div>
 
-  <!-- Comparison Mode -->
-  <div *ngIf="mode === 'compare'">
-    <h3>🧩 Model Summaries</h3>
-    <div>
+  <!-- Comparison Section -->
+  <div *ngIf="mode === 'compare'" class="section-card">
+    <h3>🧩 Model Comparison Results</h3>
+
+    <div class="buttons">
       <button (click)="showGeminiSummary = !showGeminiSummary">
         {{ showGeminiSummary ? 'Hide' : 'Show' }} Gemini Summary
       </button>
-      <p *ngIf="showGeminiSummary">{{ modelSummaries.gemini }}</p>
-
       <button (click)="showHfSummary = !showHfSummary">
         {{ showHfSummary ? 'Hide' : 'Show' }} HuggingFace Summary
       </button>
-      <p *ngIf="showHfSummary">{{ modelSummaries.huggingface }}</p>
-
       <button (click)="showCombinedSummary = !showCombinedSummary">
         {{ showCombinedSummary ? 'Hide' : 'Show' }} Combined Summary
       </button>
-      <p *ngIf="showCombinedSummary">{{ modelSummaries.combined }}</p>
     </div>
+
+    <div *ngIf="showGeminiSummary" class="summary-card gemini">
+      <h3>Gemini Summary</h3>
+      <p>{{ modelSummaries.gemini }}</p>
+    </div>
+
+    <!-- HuggingFace Summary Card -->
+    <div *ngIf="showHfSummary" class="summary-card hf">
+      <h3>HuggingFace Summary</h3>
+      <p>{{ modelSummaries.huggingface }}</p>
+    </div>
+
+    <!-- Combined Summary Card -->
+    <div *ngIf="showCombinedSummary" class="summary-card combined">
+      <h3>Combined Summary</h3>
+      <p>{{ modelSummaries.combined }}</p>
+    </div>
+
     <div *ngIf="plots">
       <h3>📊 Sentiment Counts</h3>
-      <canvas *ngIf="sentimentChartData" baseChart
-              [data]="sentimentChartData"
-              [options]="chartOptions"
-              chartType="bar">
-      </canvas>
+      <canvas baseChart [data]="sentimentChartData" [options]="chartOptions" chartType="bar"></canvas>
 
       <h3>🌟 Star Ratings Distribution</h3>
-      <canvas *ngIf="ratingsChartData" baseChart
-              [data]="ratingsChartData"
-              [options]="chartOptions"
-              chartType="bar">
-      </canvas>
+      <canvas baseChart [data]="ratingsChartData" [options]="chartOptions" chartType="bar"></canvas>
     </div>
+
     <div *ngIf="comparisonData.length > 0">
       <button (click)="showReviews = !showReviews">
         {{ showReviews ? 'Hide' : 'Show' }} Sample Reviews
@@ -116,7 +131,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let review of comparisonData.slice(0,10)">
+          <tr *ngFor="let review of comparisonData.slice(0, 10)">
             <td>{{ review.review }}</td>
             <td>{{ review.rating }}</td>
             <td [ngClass]="{
@@ -136,13 +151,13 @@
           </tr>
         </tbody>
       </table>
-      <p *ngIf="comparisonData.length > 10">
+
+      <p *ngIf="comparisonData.length > 10" class="note">
         Showing 10 of {{ comparisonData.length }} reviews. Expand for more if needed.
       </p>
     </div>
-
-    
   </div>
 </div>
+
 </body>
 </html>

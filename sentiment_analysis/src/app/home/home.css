@@ -14,36 +14,44 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 40px;
+  padding: 10px 10px;
 }
 
 /* ==== Main Container ==== */
 .container {
-  background: rgb(0 9 12 / 81%);
+  background: rgba(0, 9, 12, 0.85);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 40px 50px;
-  width: 90%;
-  max-width: 800px;
+  width: 95%;
+  max-width: 900px;
   color: #e3f2fd;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  margin-top: 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  margin-top: 40px;
 }
 
 /* ==== Title ==== */
 h1 {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
   color: #90caf9;
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+}
+
+/* ==== Section Headings ==== */
+h3 {
+  margin-top: 30px;
+  color: #bbdefb;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(144, 202, 249, 0.4);
+  padding-bottom: 6px;
 }
 
 /* ==== Form ==== */
 .input-group {
-  margin: 15px 0;
-  text-align: left;
+  margin: 18px 0;
 }
 
 label {
@@ -59,25 +67,26 @@ select {
   width: 100%;
   padding: 12px 15px;
   border-radius: 10px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 1rem;
   outline: none;
-  background: rgba(255, 255, 255, 0.1);
-  color: #aca9a9;
-  transition: 0.3s ease;
+  background: rgba(255, 255, 255, 0.08);
+  color: #aaaeae;
+  transition: all 0.3s ease;
 }
 
 input[type="text"]:focus,
 select:focus {
-  box-shadow: 0 0 8px rgba(30, 136, 229, 0.6);
-  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 10px rgba(30, 136, 229, 0.7);
+  background: rgba(255, 255, 255, 0.12);
 }
 
-/* ==== Button ==== */
+/* ==== Buttons ==== */
 button {
-  margin-top: 20px;
+  margin-top: 15px;
+  margin-bottom: 20px;
   padding: 12px 25px;
-  background: linear-gradient(90deg, #0d47a1, #1976d2);
+  background: linear-gradient(90deg, #1565c0, #1e88e5);
   border: none;
   border-radius: 30px;
   color: white;
@@ -88,40 +97,41 @@ button {
 
 button:hover {
   transform: translateY(-3px);
-  background: linear-gradient(90deg, #1976d2, #0d47a1);
+  background: linear-gradient(90deg, #1e88e5, #1565c0);
   box-shadow: 0 4px 15px rgba(25, 118, 210, 0.5);
 }
 
-/* ==== Loading Text ==== */
+button + button {
+  margin-left: 10px;
+}
+
+/* ==== Loading ==== */
 .loading {
-  margin-top: 20px;
+  margin-top: 25px;
+  text-align: center;
   font-style: italic;
   color: #90caf9;
   animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 /* ==== Table ==== */
 table {
   width: 100%;
-  margin-top: 30px;
+  margin-top: 25px;
   border-collapse: collapse;
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: #e3f2fd;
 }
 
 thead {
-  background: #0d47a1;
+  background: #1565c0;
   color: #fff;
 }
 
@@ -136,6 +146,7 @@ tbody tr:hover {
   transition: background 0.3s ease;
 }
 
+/* ==== Sentiment Colors ==== */
 td.sentiment-positive {
   color: #66bb6a;
   font-weight: 600;
@@ -151,17 +162,95 @@ td.sentiment-neutral {
   font-weight: 600;
 }
 
+/* ==== Section Card ==== */
+.section-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ==== Chart Area ==== */
+canvas {
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px;
+}
+/* ==== Summary Card ==== */
+.summary-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(144, 202, 249, 0.3);
+  border-radius: 16px;
+  padding: 20px 25px;
+  margin-top: 25px;
+  color: #e3f2fd;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
+  line-height: 1.6;
+  text-align: justify;
+  animation: fadeIn 0.6s ease;
+}
+
+/* .summary-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+} */
+
+.summary-card h3 {
+  margin-bottom: 12px;
+  color: #90caf9;
+  font-size: 1.3rem;
+  border-left: 4px solid #42a5f5;
+  padding-left: 10px;
+}
+
+.summary-card p {
+  font-size: 1rem;
+  color: #cfd8dc;
+  white-space: pre-wrap;
+}
+.summary-card.gemini {
+  border-left: 4px solid #42a5f5;
+}
+
+.summary-card.hf {
+  border-left: 4px solid #ef5350;
+}
+
+.summary-card.combined {
+  border-left: 4px solid #fbc02d;
+}
+
+.summary-card.gemini h3 {
+  color: #64b5f6;
+}
+
+.summary-card.hf h3 {
+  color: #ef9a9a;
+}
+
+.summary-card.combined h3 {
+  color: #fff59d;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ==== Responsive ==== */
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .container {
     padding: 25px;
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   button {
     width: 100%;
+    margin: 8px 0;
   }
 }
