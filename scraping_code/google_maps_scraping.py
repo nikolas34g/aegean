@@ -106,6 +106,8 @@ while scroll_attempts < max_scrolls:
 
 # Collect data
 df = pd.DataFrame(columns=['review', 'rating'])
+df_raw = pd.DataFrame(columns=['review', 'rating'])
+
 reviews_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'jftiEf')]")
 
 for i, review_element in enumerate(reviews_elements):
@@ -120,9 +122,10 @@ for i, review_element in enumerate(reviews_elements):
             pass
 
         try:
-            review_text = review_element.find_element(By.XPATH, ".//span[@class='wiI7pd']").text
-            review_text = clean_text(review_text)
+            review_text_raw = review_element.find_element(By.XPATH, ".//span[@class='wiI7pd']").text
+            review_text = clean_text(review_text_raw)
         except:
+            review_text_raw = ""
             review_text = ""
 
         try:
@@ -135,6 +138,9 @@ for i, review_element in enumerate(reviews_elements):
 
         if review_text and rating:
             df.loc[len(df)] = [review_text, rating]
+        if review_text_raw and rating:
+            review_text_raw_single_line = review_text_raw.replace('\n', ' ').replace('\r', ' ').strip()
+            df_raw.loc[len(df_raw)] = [review_text_raw_single_line, rating]
 
     except Exception as e:
         print(f"Error processing review: {e}")
@@ -143,10 +149,16 @@ for i, review_element in enumerate(reviews_elements):
 # If mode=random10, pick 10 random reviews from the scraped set
 if mode == "random10" and len(df) > 10:
     df = df.sample(n=10, random_state=42).reset_index(drop=True)
+if mode == "random10" and len(df_raw) > 10:
+    df_raw = df_raw.sample(n=10, random_state=42).reset_index(drop=True)
 
-# Save CSV
+# Save both CSVs
 df.to_csv(output_path, index=False, encoding='utf-8-sig')
+raw_output_path = output_path.replace('.csv', '_raw.csv')
+df_raw.to_csv(raw_output_path, index=False, encoding='utf-8-sig')
+
 driver.quit()
 
 print(f"Total reviews collected: {len(df)}")
-print(f"Reviews saved to: {output_path}")
+print(f"✅ Cleaned reviews saved to: {output_path}")
+print(f"✅ Raw (unprocessed) reviews saved to: {raw_output_path}")
