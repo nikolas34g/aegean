@@ -141,10 +141,9 @@ runComparison() {
     return;
   }
 
-  // Clear old state for a new comparison
   localStorage.removeItem('reviewAppState');
-
   this.loading = true;
+
   this.reviewsService.compareModels(this.url).subscribe({
     next: (data) => {
       this.comparisonData = data.comparisons || [];
@@ -159,18 +158,21 @@ runComparison() {
       this.plots = data.plots;
 
       if (this.plots) {
+        // Force consistent order of sentiments
+        const sentimentOrder = ['Positive', 'Neutral', 'Negative'];
+
         this.sentimentChartData = {
-          labels: Object.keys(this.plots.sentiment_counts.gemini),
+          labels: sentimentOrder,
           datasets: [
             {
               label: 'Gemini',
-              data: Object.values(this.plots.sentiment_counts.gemini),
-              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              data: sentimentOrder.map(s => this.plots.sentiment_counts.gemini[s] || 0),
+              backgroundColor: 'rgba(54, 162, 235, 0.6)', // All bars blue
             },
             {
               label: 'HuggingFace',
-              data: Object.values(this.plots.sentiment_counts.huggingface),
-              backgroundColor: 'rgba(255, 99, 132, 0.6)',
+              data: sentimentOrder.map(s => this.plots.sentiment_counts.huggingface[s] || 0),
+              backgroundColor: 'rgba(255, 99, 132, 0.6)', // All bars red
             },
           ],
         };
@@ -187,7 +189,7 @@ runComparison() {
         };
       }
 
-      this.saveState(); // save new state
+      this.saveState();
       this.loading = false;
     },
     error: (err) => {
