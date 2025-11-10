@@ -34,7 +34,7 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text).strip().lower()
     text = re.sub(r'[^\w\s]', '', text)
     words = word_tokenize(text)
-    words = [w for w in words if w not in stop_words]
+    # words = [w for w in words if w not in stop_words]
     return ' '.join(words)
 
 # Chrome options
