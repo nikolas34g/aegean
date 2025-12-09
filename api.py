@@ -4,10 +4,11 @@ from pydantic import BaseModel
 import os, datetime, subprocess, pandas as pd, sys
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
 import asyncio
 python_executable = sys.executable
 app = FastAPI()
-
+load_dotenv()
 # Allow Angular frontend to access this API
 app.add_middleware(
     CORSMiddleware,
@@ -60,7 +61,10 @@ async def analyze_reviews(request: AnalysisRequest):
     reviews = df.to_dict(orient="records")
 
     # Generate summary using Gemini API
-    client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
+
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    client = genai.Client(api_key=gemini_key)
+    # client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
     summary_text = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=f"""Analyze these reviews ({model} results): {reviews}
