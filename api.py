@@ -17,7 +17,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+gemini_key = os.getenv("GEMINI_API_KEY")
 # ------------------ MODELS ------------------ #
 class AnalysisRequest(BaseModel):
     url: str
@@ -62,9 +62,11 @@ async def analyze_reviews(request: AnalysisRequest):
 
     # Generate summary using Gemini API
 
-    gemini_key = os.getenv("GEMINI_API_KEY")
-    client = genai.Client(api_key=gemini_key)
-    # client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
+    
+    # if not gemini_key:
+    #     return {"error": "GEMINI_API_KEY is not set"} 
+    # client = genai.Client(api_key=gemini_key)
+    client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
     summary_text = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=f"""Analyze these reviews ({model} results): {reviews}
@@ -117,7 +119,9 @@ async def compare_models(request: ComparisonRequest):
 
     # Generate summaries with Gemini API
     client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
-
+    # if not gemini_key:
+    #     return {"error": "GEMINI_API_KEY is not set"} 
+    # client = genai.Client(api_key=gemini_key)
     # Gemini model summary
     gemini_summary = client.models.generate_content(
         model="gemini-2.5-flash",
