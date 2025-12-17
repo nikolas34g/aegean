@@ -3,8 +3,14 @@ import sys
 import pandas as pd
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # sentiment_analysis_code
+ROOT_DIR = os.path.dirname(BASE_DIR)                    # backend
+ENV_PATH = os.path.join(ROOT_DIR, "environments", ".env")
 
+load_dotenv(ENV_PATH)
+gemini_key = os.getenv("GEMINI_API_KEY")
 
 if len(sys.argv) < 2:
     print("Usage: python gemini.py <csv_file_path>")
@@ -17,8 +23,10 @@ if not os.path.exists(csv_file):
     sys.exit(1)
 
 # ✅ Initialize Gemini client
-client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
 
+
+# client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
+client = genai.Client(api_key=gemini_key)
 # ✅ Read the CSV
 df = pd.read_csv(csv_file)
 df = df.drop_duplicates(subset=['review', 'rating'])

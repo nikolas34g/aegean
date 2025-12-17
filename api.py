@@ -13,7 +13,7 @@ ENV_PATH = os.path.join(BASE_DIR, "environments", ".env")
 
 load_dotenv(ENV_PATH)
 
-gemini_key = os.getenv("GEMINI_API_KEY")
+
 # Allow Angular frontend to access this API
 app.add_middleware(
     CORSMiddleware,
@@ -65,13 +65,10 @@ async def analyze_reviews(request: AnalysisRequest):
     df = pd.read_csv(reviews_path)
     reviews = df.to_dict(orient="records")
 
-    # Generate summary using Gemini API
+    # client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
+    client = genai.Client(api_key=gemini_key)
 
     
-    # if not gemini_key:
-    #     return {"error": "GEMINI_API_KEY is not set"} 
-    # client = genai.Client(api_key=gemini_key)
-    client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
     summary_text = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=f"""Analyze these reviews ({model} results): {reviews}
@@ -123,10 +120,9 @@ async def compare_models(request: ComparisonRequest):
     ratings_counts = merged_df['rating'].value_counts().sort_index().to_dict()
 
     # Generate summaries with Gemini API
-    client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
-    # if not gemini_key:
-    #     return {"error": "GEMINI_API_KEY is not set"} 
-    # client = genai.Client(api_key=gemini_key)
+    # client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
+    client = genai.Client(api_key=gemini_key)
+
     # Gemini model summary
     gemini_summary = client.models.generate_content(
         model="gemini-2.5-flash",
