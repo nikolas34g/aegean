@@ -8,7 +8,12 @@ from dotenv import load_dotenv
 import asyncio
 python_executable = sys.executable
 app = FastAPI()
-load_dotenv()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ENV_PATH = os.path.join(BASE_DIR, "environments", ".env")
+
+load_dotenv(ENV_PATH)
+
+gemini_key = os.getenv("GEMINI_API_KEY")
 # Allow Angular frontend to access this API
 app.add_middleware(
     CORSMiddleware,
