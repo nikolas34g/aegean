@@ -47,7 +47,7 @@ options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--log-level=3')
 
-driver = uc.Chrome(options=options)
+driver = uc.Chrome(options=options, version_main=144)
 driver.get(url)
 
 # Accept cookies
@@ -61,25 +61,63 @@ except:
 
 # Click Reviews tab
 try:
-    reviews_tab = WebDriverWait(driver, 15).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(@aria-label, 'Reviews') or contains(@aria-label, 'Κριτικές')]"))
-    )
-    reviews_tab.click()
+    print("Searching for Reviews tab...")
+
+    # These XPaths cover common variations (2026 update)
+    selectors = [
+        "//button[@role='tab' and (contains(., 'Reviews') or contains(., 'Κριτικές'))]",
+        "//button[contains(@aria-label, 'Reviews') or contains(@aria-label, 'Κριτικές')]",
+        "//div[@role='tab'][contains(., 'Reviews') or contains(., 'Κριτικές')]",
+        "//button[contains(@data-item-id, 'reviews')]"
+    ]
+
+    found = False
+    for sel in selectors:
+        try:
+            tab = WebDriverWait(driver, 5).until(
+                EC.element_to_be_clickable((By.XPATH, sel))
+            )
+            driver.execute_script("arguments[0].scrollIntoView(true);", tab)
+            driver.execute_script("arguments[0].click();", tab)
+            print(f"✅ Clicked Reviews tab using selector: {sel}")
+            found = True
+            break
+        except:
+            continue
+
+    # If still not found, maybe we are on a list of results
+    if not found:
+        results = driver.find_elements(By.CLASS_NAME, "hfpxzc")  # place cards
+        if results:
+            print("Detected list view, clicking first result...")
+            results[0].click()
+            time.sleep(3)
+            # Re-run the tab logic once more
+            for sel in selectors:
+                try:
+                    tab = WebDriverWait(driver, 5).until(
+                        EC.element_to_be_clickable((By.XPATH, sel))
+                    )
+                    driver.execute_script("arguments[0].scrollIntoView(true);", tab)
+                    driver.execute_script("arguments[0].click();", tab)
+                    print(f"✅ Clicked Reviews tab on place page using selector: {sel}")
+                    found = True
+                    break
+                except:
+                    continue
+
+    if not found:
+        raise Exception("Could not find Reviews tab after multiple attempts")
+
     time.sleep(3)
+
 except Exception as e:
-    print(f"Could not find Reviews tab: {e}")
+    driver.save_screenshot("failed_tab_discovery.png")
+    print(f"❌ TAB FAILURE: {e}")
     driver.quit()
     sys.exit(1)
 
-# Wait for reviews to load
-try:
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'jftiEf')]"))
-    )
-except:
-    print("No reviews found")
-    driver.quit()
-    sys.exit(1)
+
 
 # Scroll for more reviews
 prev_count = 0
