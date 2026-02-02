@@ -4,7 +4,7 @@ import pandas as pd
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
-
+import time
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # sentiment_analysis_code
 ROOT_DIR = os.path.dirname(BASE_DIR)                    # backend
 ENV_PATH = os.path.join(ROOT_DIR, "environments", ".env")
@@ -26,7 +26,17 @@ if not os.path.exists(csv_file):
 
 
 # client = genai.Client(api_key="AIzaSyCWSvfk15LGLedXRpOV6UIg3OsmojIX_Ro")
-client = genai.Client(api_key=gemini_key)
+client = genai.Client(
+    api_key=gemini_key,
+    http_options=types.HttpOptions(
+        retry_options=types.HttpRetryOptions(
+            attempts=5,          # Try 5 times before giving up
+            initial_delay=2,     # Start with 2 seconds
+            max_delay=30,        # Maximum wait of 30 seconds
+            http_status_codes=[429] # Specifically retry on Rate Limits
+        )
+    )
+)
 # ✅ Read the CSV
 df = pd.read_csv(csv_file)
 df = df.drop_duplicates(subset=['review', 'rating'])
@@ -56,7 +66,7 @@ for idx, row in df.iterrows():
         "rating": rating,
         "sentiment": sentiment
     })
-
+time.sleep(5)
     # print(f"✅ Review {idx+1}: {sentiment}")
 
 # ✅ Save results in the 'reviews' folder
