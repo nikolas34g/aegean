@@ -16,7 +16,7 @@ if not os.path.exists(csv_file):
 
 df = pd.read_csv(csv_file)
 df = df.drop_duplicates(subset=['review', 'rating'])
-df = df.head(5)    
+# df = df.head(5)  
 # Load the multilingual sentiment model
 model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
 tokenizer = AutoTokenizer.from_pretrained(model_name)

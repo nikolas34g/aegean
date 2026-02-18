@@ -40,7 +40,7 @@ client = genai.Client(
 # ✅ Read the CSV
 df = pd.read_csv(csv_file)
 df = df.drop_duplicates(subset=['review', 'rating'])
-df = df.head(5)
+# df = df.head(5)
 results = []
 
 for idx, row in df.iterrows():
